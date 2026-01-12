@@ -55,7 +55,7 @@ document.getElementById('btn-sdq').addEventListener('click', () => copyToClipboa
 
 // document.getElementById('btn-pur').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql produccion_pr\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
 
-document.getElementById('btn-pur').addEventListener('click', () => copyToClipboard('produccion_pr'))
+document.getElementById('btn-pur').addEventListener('click', () => copyToClipboard('psql produccion_pr'))
 document.getElementById('btn-cau').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql produccion_ca\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
 
 // Eventos para los números telefónicos
@@ -233,6 +233,7 @@ document.getElementById('btn-correo-outlook').addEventListener('click', () => co
 document.getElementById('btn-plantilla-incorrecta-foto').addEventListener('click', () => {
   copyImageToClipboard('img/plantilla.png');
 });
+
 
 
 
