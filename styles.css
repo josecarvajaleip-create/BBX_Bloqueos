@@ -413,3 +413,11 @@ tr:nth-child(even) {
 .left-side h2 {
   text-align: center;
 }
+
+#btn-consulta-especial {
+  background: #e74c3c;
+}
+
+#btn-consulta-especial:hover {
+  background: #c0392b;
+}

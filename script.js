@@ -33,7 +33,7 @@ function showNotification(message, isError = false) {
 // Eventos para los botones de consultas
 document.getElementById('btn-sudo-gca').addEventListener('click', () => copyToClipboard('sudo su postgres'));
 document.getElementById('btn-bbdd-gca').addEventListener('click', () => copyToClipboard('psql produccion_lpa'));
-document.getElementById('btn-consulta-gca').addEventListener('click', () => copyToClipboard('select blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;'));
+document.getElementById('btn-consulta-gca').addEventListener('click', () => copyToClipboard("SELECT bl.pid AS blocked_pid, kl.pid AS blocking_pid, a.query AS query_blocked, ka.query AS query_blocking, bl.transactionid, kl.granted, a.query_start FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid ORDER BY a.query_start;"));
 
 // document.getElementById('btn-sudo-pmi').addEventListener('click', () => copyToClipboard('sudo su postgres'));
 document.getElementById('btn-bbdd-pmi').addEventListener('click', () => copyToClipboard('psql produccion_pmi'));
@@ -57,6 +57,9 @@ document.getElementById('btn-sdq').addEventListener('click', () => copyToClipboa
 
 document.getElementById('btn-pur').addEventListener('click', () => copyToClipboard('psql produccion_pr'))
 document.getElementById('btn-cau').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql produccion_ca\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
+document.getElementById('btn-consulta-select').addEventListener('click', () => copyToClipboard("SELECT DISTINCT kl.pid AS blocking_pid, a.query_start FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid WHERE ka.query NOT IN (SELECT ka.query FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid WHERE ka.query ILIKE '%UPDATE%' OR ka.query ILIKE '%INSERT%' OR ka.query ILIKE '%comprobantefiscal%' OR ka.query ILIKE '%rangonumeroscomprobantesfiscales%' OR ka.query ILIKE '%transaccion%' OR ka.query ILIKE '%numeraciondocumentos%' OR ka.query ILIKE '%factura%') ORDER BY a.query_start;"));
+document.getElementById('btn-consulta-update').addEventListener('click', () => copyToClipboard("SELECT DISTINCT kl.pid AS blocking_pid, a.query_start FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid WHERE ka.query NOT IN (SELECT ka.query FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid WHERE ka.query ILIKE '%comprobantefiscal%' OR ka.query ILIKE '%rangonumeroscomprobantesfiscales%' OR ka.query ILIKE '%transaccion%' OR ka.query ILIKE '%factura%') ORDER BY a.query_start;"));
+document.getElementById('btn-consulta-especial').addEventListener('click', () => copyToClipboard("SELECT DISTINCT kl.pid AS blocking_pid, a.query_start FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid WHERE ka.query NOT IN (SELECT ka.query FROM pg_locks bl JOIN pg_stat_activity AS a ON bl.pid = a.pid JOIN pg_locks AS kl ON bl.transactionid = kl.transactionid AND bl.pid <> kl.pid JOIN pg_stat_activity AS ka ON kl.pid = ka.pid WHERE ka.query ILIKE '%comprobantefiscal%' OR ka.query ILIKE '%rangonumeroscomprobantesfiscales%' OR ka.query ILIKE '%transaccion%' OR ka.query ILIKE '%factura%') ORDER BY a.query_start;"));
 
 // Eventos para los números telefónicos
 document.querySelectorAll('.click-to-copy').forEach(element => {
@@ -153,8 +156,7 @@ async function copyImageToClipboard(imgURL) {
 }
 
 // Mensajes predefinidos
-const ClaveTV1 = `It,.,2012`;
-const ClaveTV2 = `@iSPC#0202`;
+
 
 const mensajeSinContacto = `Saludos.
 
@@ -218,8 +220,7 @@ Pero si deciden usar Outlook, favor de tener en cuenta las posibles consecuencia
 Nos dejan saber su respuesta.`;
 
 // Asignar eventos a los botones
-document.getElementById('btn-clave1tv').addEventListener('click', () => copyToClipboard(ClaveTV1));
-document.getElementById('btn-clave2tv').addEventListener('click', () => copyToClipboard(ClaveTV2));
+
 document.getElementById('btn-sin-contacto').addEventListener('click', () => copyToClipboard(mensajeSinContacto));
 document.getElementById('btn-sin-seguimiento').addEventListener('click', () => copyToClipboard(mensajeSinSeguimiento));
 document.getElementById('btn-my-learning').addEventListener('click', () => copyToClipboard(mensajeMyLearning));
