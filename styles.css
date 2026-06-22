@@ -1,5 +1,8 @@
+* {
+  box-sizing: border-box;
+}
 :root {
-  --primary-color: #2C3E50;
+   --primary-color: #2C3E50;
   --secondary-color: #3498DB;
   --accent-color: #1ABC9C;
   --background: #ECF0F1;
@@ -7,6 +10,27 @@
   --table-header: #2C3E50;
   --table-row-even: #F8F9F9;
   --table-row-hover: #EBF5FB;
+
+   --card-bg: #FFFFFF;
+  --section-bg: #F8F9F9;
+  --input-bg: #FFFFFF;
+  --border-color: #DADFE3;
+}
+
+body.dark-mode {
+  --primary-color: #ECF0F1;
+  --secondary-color: #5DADE2;
+  --accent-color: #1ABC9C;
+  --background: #151A21;
+  --text-color: #EAECEE;
+  --table-header: #111827;
+  --table-row-even: #252B35;
+  --table-row-hover: #364152;
+
+  --card-bg: #20262F;
+  --section-bg: #292F39;
+  --input-bg: #303743;
+  --border-color: #48515F;
 }
 
 body {
@@ -19,13 +43,15 @@ body {
 }
 
 .container {
+  
+  width: calc(100% - 2rem);
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background: white;
+  background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-  text-align: center; /* Centra todo el texto dentro del contenedor */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 h2 {
@@ -61,7 +87,8 @@ h2::after {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--card-bg);
+  color: var(--text-color);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -422,6 +449,24 @@ tr:nth-child(even) {
   background: #c0392b;
 }
 
+.button-section {
+  margin: 1.5rem 0;
+  padding: 1.2rem;
+  background-color: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+
+.button-section h3 {
+  margin: 0 0 1rem;
+  color: var(--primary-color);
+}
+
+.button-section .query-btn {
+  margin: 0;
+}
+
+
 #btn-consulta-select {
   background: #27ae60;
 }
@@ -437,4 +482,34 @@ tr:nth-child(even) {
 
 #btn-consulta-update:hover {
   background: #d4ac0d;
+}
+
+
+
+/* Botones SharePoint y OneNote */
+#btn-enlace1,
+#btn-enlace2 {
+  background: #2C3E50;
+  color: #FFFFFF;
+  border: 1px solid #44576B;
+}
+
+#btn-enlace1:hover,
+#btn-enlace2:hover {
+  background: #3498DB;
+  color: #FFFFFF;
+}
+
+/* Ajuste específico para modo oscuro */
+body.dark-mode #btn-enlace1,
+body.dark-mode #btn-enlace2 {
+  background: #34495E;
+  color: #FFFFFF;
+  border-color: #5D6D7E;
+}
+
+body.dark-mode #btn-enlace1:hover,
+body.dark-mode #btn-enlace2:hover {
+  background: #5DADE2;
+  color: #17202A;
 }

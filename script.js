@@ -97,14 +97,16 @@ document.getElementById('btn-liberar-memoria').addEventListener('click', () => {
 // Función para alternar entre modo oscuro y claro
 function toggleMode() {
     const body = document.body;
-    const modeIcon = document.getElementById('mode-icon');
+    const button = document.getElementById('mode-toggle');
+
+    body.classList.toggle('dark-mode');
 
     if (body.classList.contains('dark-mode')) {
-        body.classList.remove('dark-mode');
-        modeIcon.textContent = 'brightness_2'; // Ícono para modo claro
+        button.textContent = '☀️ Modo claro';
+        localStorage.setItem('theme', 'dark');
     } else {
-        body.classList.add('dark-mode');
-        modeIcon.textContent = 'brightness_5'; // Ícono para modo oscuro
+        button.textContent = '🌙 Modo oscuro';
+        localStorage.setItem('theme', 'light');
     }
 }
 
@@ -235,6 +237,19 @@ document.getElementById('btn-plantilla-incorrecta-foto').addEventListener('click
   copyImageToClipboard('img/plantilla.png');
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    const button = document.getElementById('mode-toggle');
 
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+
+        if (button) {
+            button.textContent = '☀️ Modo claro';
+        }
+    } else if (button) {
+        button.textContent = '🌙 Modo oscuro';
+    }
+});
 
 
