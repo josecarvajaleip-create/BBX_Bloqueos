@@ -421,3 +421,20 @@ tr:nth-child(even) {
 #btn-consulta-especial:hover {
   background: #c0392b;
 }
+
+#btn-consulta-select {
+  background: #27ae60;
+}
+
+#btn-consulta-select:hover {
+  background: #1e8449;
+}
+
+#btn-consulta-update {
+  background: #f1c40f;
+  color: #2c3e50;
+}
+
+#btn-consulta-update:hover {
+  background: #d4ac0d;
+}
