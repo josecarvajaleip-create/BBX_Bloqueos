@@ -48,7 +48,7 @@ document.getElementById('btn-bbdd-lza').addEventListener('click', () => copyToCl
 // document.getElementById('btn-consulta-lza').addEventListener('click', () => copyToClipboard('select blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;'));
 
 
-document.getElementById('btn-val').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql produccion_val\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
+document.getElementById('btn-val').addEventListener('click', () => copyToClipboard('psql produccion_val'));
 
 // document.getElementById('btn-sdq').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql sd_produccion\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
 document.getElementById('btn-sdq').addEventListener('click', () => copyToClipboard('psql sd_produccion'));
