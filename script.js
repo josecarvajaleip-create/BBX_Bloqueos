@@ -90,9 +90,12 @@ function redirectToFacturasCorruptas() {
     window.open('http://192.168.36.168:3000/', '_blank');
 }
 
-document.getElementById('btn-liberar-memoria').addEventListener('click', () => {
-    copyToClipboard('sudo freememory.sh\n');
-});
+const botonLiberarMemoria = document.getElementById('btn-liberar-memoria');
+if (botonLiberarMemoria) {
+    botonLiberarMemoria.addEventListener('click', () => {
+        copyToClipboard('sudo freememory.sh\n');
+    });
+}
 
 // Función para alternar entre modo oscuro y claro
 function toggleMode() {
@@ -253,3 +256,299 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+
+// Generador de consultas de desbloqueo integrado en la página principal
+function mostrarGeneradorDesbloqueos() {
+    const generador = document.getElementById('generador-desbloqueos');
+    if (!generador) return;
+
+    generador.hidden = false;
+    generador.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.setTimeout(() => document.getElementById('inputNumeros')?.focus(), 350);
+}
+
+function ocultarGeneradorDesbloqueos() {
+    const generador = document.getElementById('generador-desbloqueos');
+    if (generador) generador.hidden = true;
+}
+
+function obtenerPidsValidos() {
+    const input = document.getElementById('inputNumeros');
+    if (!input) return [];
+
+    return [...new Set(
+        input.value
+            .split(/\r?\n/)
+            .map(linea => linea.trim())
+            .filter(linea => /^\d+$/.test(linea))
+    )];
+}
+
+function generarQuery() {
+    const pids = obtenerPidsValidos();
+    const resultado = document.getElementById('resultadoQuery');
+    const contador = document.getElementById('contador-pids');
+    const botonCopiar = document.getElementById('btn-copiar-query');
+    if (!resultado || !contador || !botonCopiar) return;
+
+    contador.textContent = `${pids.length} ${pids.length === 1 ? 'PID' : 'PID'}`;
+
+    if (pids.length === 0) {
+        resultado.textContent = 'No se encontraron PID válidos. Coloca un número por línea.';
+        botonCopiar.disabled = true;
+        return;
+    }
+
+    resultado.textContent = pids
+        .map(pid => `select pg_terminate_backend(${pid});`)
+        .join('\n\n');
+    botonCopiar.disabled = false;
+}
+
+function copiarResultado() {
+    const resultado = document.getElementById('resultadoQuery');
+    const botonCopiar = document.getElementById('btn-copiar-query');
+    if (!resultado || !botonCopiar || botonCopiar.disabled) return;
+    copyToClipboard(resultado.textContent);
+}
+
+function limpiarGenerador() {
+    const input = document.getElementById('inputNumeros');
+    const resultado = document.getElementById('resultadoQuery');
+    const contador = document.getElementById('contador-pids');
+    const botonCopiar = document.getElementById('btn-copiar-query');
+
+    if (input) input.value = '';
+    if (resultado) resultado.textContent = 'Las consultas aparecerán aquí.';
+    if (contador) contador.textContent = '0 PID';
+    if (botonCopiar) botonCopiar.disabled = true;
+    input?.focus();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('inputNumeros');
+    if (!input) return;
+
+    input.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+            event.preventDefault();
+            generarQuery();
+        }
+    });
+});
+
+
+// ===== Cuadro de bloqueos por tienda =====
+// Conserva el texto original y permite alternar entre la salida de PostgreSQL
+// y una presentación más legible por bloques.
+document.addEventListener('DOMContentLoaded', () => {
+    const campoBloqueos = document.getElementById('bloqueos-tiendas');
+    const botonLimpiar = document.getElementById('btn-limpiar-bloqueos');
+    const botonCopiar = document.getElementById('btn-copiar-bloqueos');
+    const botonOrganizar = document.getElementById('btn-organizar-bloqueos');
+
+    if (!campoBloqueos) return;
+
+    let textoOriginal = '';
+    let vistaOrganizada = false;
+
+    const tiendas = {
+        'btn-bbdd-gca': 'GCA',
+        'btn-bbdd-pmi': 'PMI',
+        'btn-bbdd-tfe': 'TFE',
+        'btn-bbdd-lza': 'LZA',
+        'btn-sdq': 'SDQ',
+        'btn-pur': 'PUR',
+        'btn-cau': 'CAU',
+        'btn-val': 'VAL'
+    };
+
+    const volverAVistaOriginal = () => {
+        if (!vistaOrganizada) return;
+        campoBloqueos.value = textoOriginal;
+        campoBloqueos.wrap = 'off';
+        campoBloqueos.classList.remove('vista-organizada');
+        botonOrganizar.textContent = 'ORGANIZAR';
+        vistaOrganizada = false;
+    };
+
+    const agregarTienda = (nomenclatura) => {
+        volverAVistaOriginal();
+        const contenidoActual = campoBloqueos.value.replace(/[\r\n\t ]+$/, '');
+        campoBloqueos.value = `${contenidoActual}\n\n\n${nomenclatura}`;
+        campoBloqueos.focus();
+        campoBloqueos.setSelectionRange(0, 0);
+        campoBloqueos.scrollTop = 0;
+        campoBloqueos.scrollLeft = 0;
+        showNotification(`${nomenclatura} agregado al cuadro`);
+    };
+
+    const organizarResultado = (texto) => {
+        const lineas = texto.replace(/\r/g, '').split('\n');
+        const filas = [];
+        const extras = [];
+        let tienda = '';
+
+        for (const lineaOriginal of lineas) {
+            const linea = lineaOriginal.trim();
+            if (!linea) continue;
+
+            if (/^(GCA|PMI|TFE|LZA|SDQ|PUR|CAU|VAL)$/.test(linea)) {
+                tienda = linea;
+                continue;
+            }
+
+            if (/^blocked_pid\s*\|\s*blocking_pid\s*\|/i.test(linea)) continue;
+            if (/^-+\s*\+-+\s*\+-+/.test(linea)) continue;
+
+            // Solo divide los dos primeros separadores. La consulta se conserva completa,
+            // aunque incluya otros caracteres "|" dentro del SQL.
+            const coincidencia = lineaOriginal.match(/^\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(.*)$/);
+            if (coincidencia) {
+                filas.push({
+                    bloqueado: coincidencia[1],
+                    bloqueador: coincidencia[2],
+                    consulta: coincidencia[3]
+                });
+                continue;
+            }
+
+            // Conserva literalmente pies como "(6 filas)", "(END)" y cualquier
+            // información adicional que PostgreSQL haya mostrado.
+            extras.push(lineaOriginal);
+        }
+
+        if (!filas.length) return null;
+
+        const anchoBloqueado = Math.max('blocked_pid'.length, ...filas.map(f => f.bloqueado.length));
+        const anchoBloqueador = Math.max('blocking_pid'.length, ...filas.map(f => f.bloqueador.length));
+
+        const cabecera = `${'blocked_pid'.padEnd(anchoBloqueado)} | ${'blocking_pid'.padEnd(anchoBloqueador)} | query_blocked`;
+        const separador = `${'-'.repeat(anchoBloqueado)}-+-${'-'.repeat(anchoBloqueador)}-+-${'-'.repeat(120)}`;
+        const cuerpo = filas.map(fila =>
+            `${fila.bloqueado.padStart(anchoBloqueado)} | ${fila.bloqueador.padStart(anchoBloqueador)} | ${fila.consulta}`
+        );
+
+        const resultado = [cabecera, separador, ...cuerpo];
+
+        if (extras.length) {
+            resultado.push('', ...extras);
+        }
+
+        if (tienda) {
+            resultado.push('', '', '', tienda);
+        }
+
+        return resultado.join('\n');
+    };
+
+    Object.entries(tiendas).forEach(([idBoton, nomenclatura]) => {
+        const boton = document.getElementById(idBoton);
+        boton?.addEventListener('click', () => agregarTienda(nomenclatura));
+    });
+
+    botonOrganizar?.addEventListener('click', () => {
+        if (vistaOrganizada) {
+            volverAVistaOriginal();
+            campoBloqueos.focus();
+            showNotification('Vista original restaurada');
+            return;
+        }
+
+        if (!campoBloqueos.value.trim()) {
+            showNotification('Pega primero el resultado de los bloqueos', true);
+            campoBloqueos.focus();
+            return;
+        }
+
+        const organizado = organizarResultado(campoBloqueos.value);
+        if (!organizado) {
+            showNotification('No se reconocieron filas de bloqueo para organizar', true);
+            return;
+        }
+
+        textoOriginal = campoBloqueos.value;
+        campoBloqueos.value = organizado;
+        campoBloqueos.wrap = 'off';
+        campoBloqueos.classList.add('vista-organizada');
+        campoBloqueos.scrollTop = 0;
+        campoBloqueos.scrollLeft = 0;
+        botonOrganizar.textContent = 'VER ORIGINAL';
+        vistaOrganizada = true;
+        showNotification('Bloqueos alineados como tabla sin perder el original');
+    });
+
+    botonCopiar?.addEventListener('click', () => {
+        if (!campoBloqueos.value.trim()) {
+            showNotification('No hay contenido para copiar', true);
+            campoBloqueos.focus();
+            return;
+        }
+        copyToClipboard(campoBloqueos.value);
+    });
+
+    botonLimpiar?.addEventListener('click', () => {
+        campoBloqueos.value = '';
+        textoOriginal = '';
+        vistaOrganizada = false;
+        campoBloqueos.wrap = 'off';
+        campoBloqueos.classList.remove('vista-organizada');
+        if (botonOrganizar) botonOrganizar.textContent = 'ORGANIZAR';
+        campoBloqueos.focus();
+        showNotification('Cuadro de bloqueos limpiado');
+    });
+
+    // Si el usuario edita una vista organizada, se conserva esa edición como
+    // contenido actual, pero la opción VER ORIGINAL sigue recuperando lo pegado.
+});
+
+async function copiarColumnaPid(indiceColumna) {
+    const cuadro = document.getElementById("bloqueos-tiendas");
+
+    if (!cuadro) {
+        alert("No se encontró el cuadro de bloqueos.");
+        return;
+    }
+
+    const lineas = cuadro.value.split(/\r?\n/);
+
+    const numeros = lineas
+        .map(function (linea) {
+            return linea.split("|");
+        })
+        .filter(function (columnas) {
+            return columnas.length >= 2;
+        })
+        .map(function (columnas) {
+            return columnas[indiceColumna].trim();
+        })
+        .filter(function (valor) {
+            return /^\d+$/.test(valor);
+        });
+
+    if (numeros.length === 0) {
+        alert("No se encontraron PID en esa columna.");
+        return;
+    }
+
+    const resultado = numeros.join("\n");
+
+    try {
+        await navigator.clipboard.writeText(resultado);
+        alert("¡PID copiados al portapapeles!");
+    } catch (error) {
+        const temporal = document.createElement("textarea");
+
+        temporal.value = resultado;
+        temporal.style.position = "fixed";
+        temporal.style.opacity = "0";
+
+        document.body.appendChild(temporal);
+        temporal.select();
+        document.execCommand("copy");
+        document.body.removeChild(temporal);
+
+        alert("¡PID copiados al portapapeles!");
+    }
+}

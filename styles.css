@@ -513,3 +513,500 @@ body.dark-mode #btn-enlace2:hover {
   background: #5DADE2;
   color: #17202A;
 }
+
+/* Generador integrado de desbloqueos */
+.action-buttons {
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.unlock-generator {
+  margin: 1.5rem 0 2.5rem;
+  padding: 1.5rem;
+  background: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  text-align: left;
+  animation: revealGenerator 0.25s ease-out;
+}
+
+.unlock-generator[hidden] {
+  display: none;
+}
+
+@keyframes revealGenerator {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.unlock-generator__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.unlock-generator__header h2 {
+  text-align: left;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.unlock-generator__header h2::after {
+  left: 0;
+  transform: none;
+}
+
+.unlock-generator__header p {
+  margin: 0;
+}
+
+.section-kicker {
+  color: var(--accent-color);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.close-generator {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.unlock-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.unlock-panel {
+  padding: 1.2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+
+.unlock-panel label {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.unlock-panel textarea {
+  width: 100%;
+  min-height: 210px;
+  resize: vertical;
+  padding: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.95rem;
+}
+
+.unlock-panel textarea:focus {
+  outline: 3px solid rgba(52, 152, 219, 0.18);
+  border-color: var(--secondary-color);
+}
+
+.field-help {
+  margin: 0.55rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.generator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.generator-actions button,
+#btn-copiar-query {
+  border: 0;
+  border-radius: 7px;
+  padding: 0.75rem 1rem;
+  background: var(--secondary-color);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.generator-actions .secondary-action {
+  background: var(--primary-color);
+}
+
+.generator-actions button:hover,
+#btn-copiar-query:not(:disabled):hover {
+  transform: translateY(-2px);
+  filter: brightness(0.95);
+}
+
+#btn-copiar-query:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.pid-counter {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--table-row-hover);
+  color: var(--secondary-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+#resultadoQuery {
+  min-height: 210px;
+  max-height: 360px;
+  overflow: auto;
+  margin: 0 0 1rem;
+  padding: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .unlock-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .unlock-generator {
+    padding: 1rem;
+  }
+
+  .unlock-generator__header h2 {
+    font-size: 1.25rem;
+  }
+}
+
+
+/* Página original de desbloqueos integrada entre Consultas y Registrar bloqueos */
+.embedded-unlock-section {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.unlock-page-frame {
+    display: block;
+    width: 100%;
+    min-height: 570px;
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    background: #f4f4f4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .unlock-page-frame {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 600px) {
+    .unlock-page-frame {
+        min-height: 620px;
+    }
+}
+
+
+/* ===== Diseño tipo dashboard en dos columnas ===== */
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.dashboard {
+  width: min(1820px, calc(100% - 40px));
+  margin: 76px auto 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) 2px minmax(340px, 0.85fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard-column {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+}
+
+.dashboard-divider {
+  width: 2px;
+  height: 100%;
+  min-height: calc(100vh - 116px);
+  background: var(--border-color, #485563);
+  border-radius: 99px;
+  opacity: .65;
+}
+
+.dashboard-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color, #d5dbe1);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+  overflow: hidden;
+}
+
+.dashboard-card > h2 {
+  margin: 0 0 22px;
+  text-align: center;
+  font-size: clamp(1.05rem, 1.8vw, 1.5rem);
+}
+
+.card-content {
+  min-width: 0;
+}
+
+.dashboard-card .button-section {
+  margin: 0 0 16px;
+}
+
+.dashboard-card .button-section:last-child {
+  margin-bottom: 0;
+}
+
+.dashboard-card .query-btn {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 12px;
+}
+
+.dashboard-card .query-btn button,
+.dashboard-card .button-container button {
+  width: 100%;
+}
+
+.unlock-page-frame {
+  width: 100%;
+  height: 470px;
+  border: 0;
+  border-radius: 12px;
+  background: #222;
+  display: block;
+}
+
+.restart-card table,
+.templates-card table {
+  width: 100%;
+  margin: 0;
+}
+
+.restart-card .guardias-btn {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.register-card .button-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.templates-card td:last-child {
+  white-space: nowrap;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 20;
+}
+
+@media (max-width: 980px) {
+  .dashboard {
+    width: min(760px, calc(100% - 28px));
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .dashboard-divider {
+    display: none;
+  }
+
+  .dashboard-column-left,
+  .dashboard-column-right {
+    display: contents;
+  }
+
+  .consultas-card { order: 1; }
+  .unlock-card { order: 2; }
+  .restart-card { order: 3; }
+  .register-card { order: 4; }
+  .templates-card { order: 5; }
+}
+
+@media (max-width: 560px) {
+  .dashboard {
+    width: min(100% - 18px, 760px);
+    margin-top: 68px;
+  }
+
+  .dashboard-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .dashboard-card .query-btn,
+  .register-card .button-container {
+    grid-template-columns: 1fr;
+  }
+
+  .unlock-page-frame {
+    height: 520px;
+  }
+}
+
+
+/* ===== Cuadro de bloqueos por tienda ===== */
+.bloqueos-input-card textarea {
+  display: block;
+  width: 100%;
+  min-height: 260px;
+  resize: vertical;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font: 500 0.86rem/1.45 Consolas, "Courier New", monospace;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.bloqueos-input-card textarea:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, .18);
+}
+
+.bloqueos-label {
+  display: block;
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+.bloqueos-input-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#btn-organizar-bloqueos,
+#btn-copiar-bloqueos,
+#btn-limpiar-bloqueos {
+  border: 0;
+  border-radius: 7px;
+  padding: .75rem 1.35rem;
+  background: #e74c3c;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .2s ease, filter .2s ease;
+}
+
+#btn-organizar-bloqueos {
+  background: #f39c12;
+  color: #17202a;
+}
+
+#btn-copiar-bloqueos {
+  background: var(--secondary-color);
+}
+
+#btn-organizar-bloqueos:hover,
+#btn-copiar-bloqueos:hover,
+#btn-limpiar-bloqueos:hover {
+  transform: translateY(-2px);
+  filter: brightness(.94);
+}
+
+@media (max-width: 980px) {
+  .bloqueos-input-card { order: 2; }
+  .unlock-card { order: 3; }
+  .restart-card { order: 4; }
+  .register-card { order: 5; }
+  .templates-card { order: 6; }
+}
+
+
+/* Ajustes visuales específicos para modo oscuro */
+body.dark-mode .dashboard-card {
+  background: #20262f;
+  border-color: #3d4653;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+}
+
+body.dark-mode .dashboard-card .button-section,
+body.dark-mode .bloqueos-input-card .card-content {
+  background: #292f39;
+  border-color: #48515f;
+}
+
+body.dark-mode .bloqueos-input-card textarea {
+  background: #171c23;
+  color: #f2f4f7;
+  border-color: #4b5563;
+}
+
+body.dark-mode .bloqueos-input-card textarea::placeholder {
+  color: #8f9aa8;
+}
+
+
+/* Vista organizada en tabla horizontal, conservando las consultas completas */
+.bloqueos-input-card textarea.vista-organizada {
+  min-height: 340px;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+  overflow-x: auto;
+  overflow-y: auto;
+  line-height: 1.55;
+  tab-size: 4;
+}
+
+/* La tarjeta de bloqueos aprovecha todo el ancho de la columna izquierda. */
+.bloqueos-input-card {
+  overflow: visible;
+}
+
+@media (max-width: 560px) {
+  .bloqueos-input-actions {
+    flex-wrap: wrap;
+  }
+
+  #btn-organizar-bloqueos,
+  #btn-copiar-bloqueos,
+  #btn-limpiar-bloqueos {
+    flex: 1 1 130px;
+  }
+}
