@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Query</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333; /* Color de texto predeterminado */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .contenedor-input {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 300px;
+            height: 100px;
+            margin: 0 auto; /* Centrado */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .mensaje-enter {
+            color: #777;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .resultado-box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 0 auto;
+            max-width: 300px;
+            text-align: left;
+            position: relative;
+            background-color: #fff; /* Fondo claro */
+        }
+
+        .copy-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background-color: #00678e;
+        }
+
+        /* Botones visibles */
+        .toggle-mode-button {
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-mode-button:hover {
+            color: #777;
+        }
+
+        /* Modo oscuro */
+        body.dark-mode {
+            background-color: #222;
+            color: #ddd; /* Color de texto en modo oscuro */
+        }
+
+        body.dark-mode .resultado-box {
+            background-color: #444; /* Fondo oscuro */
+            border-color: #666;
+        }
+
+        .dark-mode .copy-button {
+            background-color: #004d66; /* Cambiar color de botón en modo oscuro */
+        }
+    </style>
+</head>
+<body>
+    <h2>Generador de Query</h2>
+
+    <div class="contenedor-input">
+        <label for="inputNumeros">Listado Numérico (uno debajo de otro):</label>
+        <textarea id="inputNumeros" placeholder="Ejemplo: 1\n2\n3\n4" onkeydown="if (event.key === 'Enter') generarQuery()"></textarea>
+        <div class="mensaje-enter">Presiona ENTER para generar</div>
+    </div>
+
+    <div class="resultado-box" id="resultadoBox">
+        <pre id="resultadoQuery"></pre>
+        <button class="copy-button" onclick="copiarResultado()">Copiar</button>
+    </div>
+
+    <button class="toggle-mode-button" onclick="toggleDarkMode()"><i class="material-icons">brightness_2</i></button>
+    <button class="toggle-mode-button" onclick="toggleLightMode()"><i class="material-icons">brightness_5</i></button>
+
+    <script>
+        function generarQuery() {
+            var inputNumeros = document.getElementById('inputNumeros');
+            var gruposNumeros = inputNumeros.value.split('\n').map(function(numero) {
+                return numero.trim();
+            }).filter(function(numero) {
+                // Filtrar solo líneas que contengan números
+                return /^\d+$/.test(numero);
+            });
+
+            var query = '';
+
+            for (var i = 0; i < gruposNumeros.length; i++) {
+                query += 'select pg_terminate_backend(' + gruposNumeros[i] + ');\n\n';
+            }
+
+            document.getElementById('resultadoQuery').textContent = query;
+        }
+
+        function copiarResultado() {
+            var resultadoQuery = document.getElementById('resultadoQuery');
+            var textarea = document.createElement('textarea');
+            textarea.value = resultadoQuery.textContent;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('¡Resultado copiado al portapapeles!');
+        }
+
+        function toggleDarkMode() {
+            var body = document.body;
+            body.classList.add('dark-mode');
+        }
+
+        function toggleLightMode() {
+            var body = document.body;
+            body.classList.remove('dark-mode');
+        }
+    </script>
+</body>
+</html>

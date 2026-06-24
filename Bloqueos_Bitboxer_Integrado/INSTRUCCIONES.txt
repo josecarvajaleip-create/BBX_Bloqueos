@@ -1,0 +1,17 @@
+PROYECTO BLOQUEOS BITBOXER - VERSIÓN INTEGRADA
+
+Archivos que debes subir juntos al repositorio:
+- index.html
+- styles.css
+- script.js
+- LISTADO-BLOQUEOS-2.html
+
+Mantén también tus carpetas existentes:
+- img
+- foto
+
+CAMBIO REALIZADO
+La página original de desbloqueos se conserva sin modificaciones y aparece integrada entre las secciones CONSULTAS y REGISTRAR BLOQUEOS.
+
+IMPORTANTE
+No cambies el nombre LISTADO-BLOQUEOS-2.html, porque index.html lo carga dentro de esa sección.

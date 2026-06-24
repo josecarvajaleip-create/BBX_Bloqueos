@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Generador de Query</title>
+
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    >
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .contenedor-input {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 300px;
+            height: 100px;
+            margin: 0 auto;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .mensaje-enter {
+            color: #777;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .resultado-box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 0 auto;
+            max-width: 300px;
+            min-height: 80px;
+            text-align: left;
+            position: relative;
+            background-color: #fff;
+        }
+
+        #resultadoQuery {
+            margin: 0;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            min-height: 35px;
+        }
+
+        .query-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .query-button {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition:
+                background-color 0.3s ease,
+                transform 0.2s ease;
+        }
+
+        .query-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .query-button:active {
+            transform: translateY(0);
+        }
+
+        .copy-button {
+            background-color: #008cba;
+        }
+
+        .copy-button:hover {
+            background-color: #00678e;
+        }
+
+        .clear-button {
+            background-color: #ef4b3e;
+        }
+
+        .clear-button:hover {
+            background-color: #c83b30;
+        }
+
+        .toggle-mode-button {
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-mode-button:hover {
+            color: #777;
+        }
+
+        /* Modo oscuro */
+
+        body.dark-mode {
+            background-color: #222;
+            color: #ddd;
+        }
+
+        body.dark-mode textarea {
+            background-color: #171d24;
+            color: #fff;
+            border-color: #586270;
+        }
+
+        body.dark-mode textarea::placeholder {
+            color: #999;
+        }
+
+        body.dark-mode .resultado-box {
+            background-color: #171d24;
+            border-color: #586270;
+        }
+
+        body.dark-mode .mensaje-enter {
+            color: #aaa;
+        }
+
+        body.dark-mode .copy-button {
+            background-color: #00799f;
+        }
+
+        body.dark-mode .copy-button:hover {
+            background-color: #006080;
+        }
+
+        @media (max-width: 500px) {
+            .query-actions {
+                flex-direction: column;
+            }
+
+            .query-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Generador de Query</h2>
+
+    <div class="contenedor-input">
+        <label for="inputNumeros">
+            Listado Numérico (uno debajo de otro):
+        </label>
+
+        <textarea
+            id="inputNumeros"
+            placeholder="Ejemplo: 1&#10;2&#10;3&#10;4"
+        ></textarea>
+
+        <div class="mensaje-enter">
+            Presiona ENTER para generar
+        </div>
+    </div>
+
+    <div class="resultado-box" id="resultadoBox">
+        <pre id="resultadoQuery"></pre>
+
+        <div class="query-actions">
+            <button
+                type="button"
+                class="query-button copy-button"
+                onclick="copiarResultado()"
+            >
+                Copiar
+            </button>
+
+            <button
+                type="button"
+                class="query-button clear-button"
+                onclick="limpiarGenerador()"
+            >
+                Limpiar
+            </button>
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="toggle-mode-button"
+        onclick="toggleDarkMode()"
+        title="Modo oscuro"
+    >
+        <i class="material-icons">brightness_2</i>
+    </button>
+
+    <button
+        type="button"
+        class="toggle-mode-button"
+        onclick="toggleLightMode()"
+        title="Modo claro"
+    >
+        <i class="material-icons">brightness_5</i>
+    </button>
+
+    <script>
+        const inputNumeros = document.getElementById("inputNumeros");
+        const resultadoQuery = document.getElementById("resultadoQuery");
+
+        /*
+         * Genera las consultas después de pulsar Enter.
+         * setTimeout permite que el salto de línea se agregue antes
+         * de procesar el contenido.
+         */
+        inputNumeros.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                setTimeout(generarQuery, 0);
+            }
+        });
+
+        /*
+         * También actualiza el resultado al pegar, escribir
+         * o borrar números.
+         */
+        inputNumeros.addEventListener("input", generarQuery);
+
+        function generarQuery() {
+            const gruposNumeros = inputNumeros.value
+                .split(/\r?\n/)
+                .map(function (numero) {
+                    return numero.trim();
+                })
+                .filter(function (numero) {
+                    return /^\d+$/.test(numero);
+                });
+
+            let query = "";
+
+            for (let i = 0; i < gruposNumeros.length; i++) {
+                query +=
+                    "select pg_terminate_backend(" +
+                    gruposNumeros[i] +
+                    ");\n\n";
+            }
+
+            resultadoQuery.textContent = query;
+        }
+
+        async function copiarResultado() {
+            const resultado = resultadoQuery.textContent;
+
+            if (!resultado.trim()) {
+                alert("No hay ningún resultado para copiar.");
+                inputNumeros.focus();
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(resultado);
+                alert("¡Resultado copiado al portapapeles!");
+            } catch (error) {
+                const textareaTemporal = document.createElement("textarea");
+
+                textareaTemporal.value = resultado;
+                textareaTemporal.style.position = "fixed";
+                textareaTemporal.style.opacity = "0";
+
+                document.body.appendChild(textareaTemporal);
+                textareaTemporal.select();
+
+                document.execCommand("copy");
+                document.body.removeChild(textareaTemporal);
+
+                alert("¡Resultado copiado al portapapeles!");
+            }
+        }
+
+        function limpiarGenerador() {
+            inputNumeros.value = "";
+            resultadoQuery.textContent = "";
+
+            inputNumeros.focus();
+            inputNumeros.scrollTop = 0;
+            inputNumeros.setSelectionRange(0, 0);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.add("dark-mode");
+        }
+
+        function toggleLightMode() {
+            document.body.classList.remove("dark-mode");
+        }
+    </script>
+</body>
+</html>
+```
+

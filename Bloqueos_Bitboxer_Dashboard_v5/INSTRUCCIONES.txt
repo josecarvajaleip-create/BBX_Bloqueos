@@ -1,0 +1,10 @@
+PANEL BITBOXER - VERSION 6
+
+Cambios principales:
+- Columna izquierda ampliada para visualizar mejor los bloqueos.
+- El botón ORGANIZAR alinea el resultado como una tabla horizontal.
+- Se conservan completas las consultas SQL, (filas), (END) y la tienda.
+- El cuadro permite desplazamiento horizontal y vertical.
+- VER ORIGINAL recupera exactamente el texto pegado.
+
+Mantenga las carpetas img y foto del proyecto original.

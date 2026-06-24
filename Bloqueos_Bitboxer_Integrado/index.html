@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas Bitboxer</title>
+    <link rel="icon" type="image/png" href="./foto/favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+       <div class="theme-toggle">
+        <button id="mode-toggle" type="button" onclick="toggleMode()">
+            🌙 Modo oscuro
+        </button>
+    </div>
+    
+    <div class="container">
+        <div class="tables-container">
+            <div class="left-side">
+                <h2>REINICIO BITBOXER</h2>      
+                <table>
+                    <tbody><tr>
+                        <th>-TIENDA-</th>
+                        <th>------------AREA------------</th>
+                        <th>-NUMERO-</th>
+                    </tr>
+                    <tr>
+                        <td>GCA</td>
+                        <td>JEFE DE DIA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="1700">1700</span><br>
+                            <span class="click-to-copy" data-phone-number="1228">1228</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>TFE</td>
+                        <td>JEFE DE DIA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="2700">2700</span><br>
+                            <span class="click-to-copy" data-phone-number="922208989">922208989</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>LZA</td>
+                        <td>JEFE DE DIA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="4700">4700</span><br>
+                            <span class="click-to-copy" data-phone-number="4421">4421</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PMI</td>
+                        <td>JEFE DE DIA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="971910568">971910568</span><br>
+                            <span class="click-to-copy" data-phone-number="3419">3419</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PUR</td>
+                        <td>SEGURIDAD BY<br>SEGURIDAD CA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="9394444540">939-444-4540</span><br>
+                            <span class="click-to-copy" data-phone-number="9394393547">939-439-3547</span><br>
+                            <span class="click-to-copy" data-phone-number="7872380878">787-238-0878</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>SDQ</td>
+                        <td>JEFE DE DIA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="5001">5001</span> / <span class="click-to-copy" data-phone-number="5002">5002</span><br>
+                            <span class="click-to-copy" data-phone-number="5678">5678</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PUJ</td>
+                        <td>JEFE DE DIA<br>ALMACEN</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="18293454284">1 829-345-4284</span><br>
+                            <span class="click-to-copy" data-phone-number="">-</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>STI</td>
+                        <td>JEFE DE DIA<br>JEFE DE TARDE</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="18294231810">18294231810</span><br>
+                            <span class="click-to-copy" data-phone-number="18294205121">18294205121</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>LRM</td>
+                        <td>ANA GUERRERO</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="5877">5877</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CAU</td>
+                        <td>JEFE DE DIA<br>FERNANDO CRUZ</td>
+                        <td>
+                            <span class="click-to-copy" data-phone-number="5886">5886</span><br>
+                            <span class="click-to-copy" data-phone-number="8095017303">809-501-7303</span>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
+
+        <!-- Botón GUARDIAS -->
+    <div class="guardias-btn">
+        <button id="btn-guardias" onclick="redirectToGuardias()" style="background: linear-gradient(135deg, #1ABC9C, #16A085); color: white; padding: 1rem 2rem; border-radius: 12px; cursor: pointer;">GUARDIAS</button>
+    </div>
+
+        <!-- Resto del contenido -->
+        <h2>CONSULTAS DE BLOQUEOS BITBOXER</h2>
+
+<div class="button-section">
+    <h3>ACCEDER USUARIO</h3>
+
+    <div class="query-btn">
+        <button id="btn-sudo-gca">SUDO SU</button>
+    </div>
+</div>
+
+<div class="button-section">
+    <h3>TIENDAS</h3>
+
+    <div class="query-btn">
+        <button id="btn-bbdd-gca">BBDD GCA</button>
+        <button id="btn-bbdd-pmi">BBDD PMI</button>
+        <button id="btn-bbdd-tfe">BBDD TFE</button>
+        <button id="btn-bbdd-lza">BBDD LZA</button>
+        <button id="btn-sdq">BBDD SDQ</button>
+        <button id="btn-pur">BBDD PUR</button>
+        <button id="btn-cau">CAU</button>
+        <button id="btn-val">VAL</button>
+    </div>
+</div>
+
+<div class="button-section">
+    <h3>CONSULTAS</h3>
+
+    <div class="query-btn">
+        <button id="btn-consulta-gca">CONSULTA</button>
+        <button id="btn-consulta-select">CONSULTA SELECT</button>
+        <button id="btn-consulta-update">CONSULTA UPDATE</button>
+        <button id="btn-consulta-especial">CONSULTA ESPECIAL</button>
+
+    </div>
+</div>
+
+        <div class="query-btn action-buttons">
+            <button id="btn-liberar-memoria" type="button">LIBERAR MEMORIA</button>
+        </div>
+
+        <!-- Página original de desbloqueos, integrada sin modificar -->
+        <section class="embedded-unlock-section" aria-labelledby="titulo-desbloqueos-integrado">
+            <h2 id="titulo-desbloqueos-integrado">DESBLOQUEAR BLOQUEOS</h2>
+            <iframe
+                class="unlock-page-frame"
+                src="LISTADO-BLOQUEOS-2.html"
+                title="Generador de consultas para desbloquear bloqueos"
+                loading="lazy">
+            </iframe>
+        </section>
+
+	<h2>REGISTRAR BLOQUEOS</h2>
+        <div class="button-container">
+            <button id="btn-enlace1" onclick="redirectToSharePoint()">SHAREPOINT</button>
+            <button id="btn-enlace2" onclick="redirectToOneNote()">ONENOTE</button>
+        </div>
+
+
+	<h2>------------------------------------------------------------------------</h2>
+<h2>PERMISOS PERSONALIZADOS</h2>
+<div class="template-box">
+  <form class="template-form" onsubmit="generarPermiso(event)">
+    <input type="text" placeholder="Nombre de usuario" name="nombre" required />
+    <input type="text" placeholder="Usuario de referencia" name="referencia" required />
+    <input type="text" placeholder="Plataforma" name="plataforma" required />
+    <input type="text" placeholder="Acceso" name="acceso" required />
+    <div class="form-buttons">
+      <button type="submit">Generar y Copiar</button>
+      <button type="button" onclick="limpiarResultado()">Limpiar</button>
+    </div>
+  </form>
+  <div class="template-content" id="resultado-permiso"></div>
+</div>
+
+    </div>
+
+
+
+<div class="container">
+  <h2>PLANTILLAS</h2>
+  <div class="tables-container">
+    <div class="left-side">
+      <table>
+        <thead>
+          <tr>
+            <th>MOTIVO</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            
+          </tr>            
+          <tr>
+            <td>Contacto Sin Éxito</td>
+            <td><button id="btn-sin-contacto" class="res-btn">COPIAR</button></td>
+          </tr>
+          <tr>
+            <td>Sin Seguimiento</td>
+            <td><button id="btn-sin-seguimiento" class="res-btn">COPIAR</button></td>
+          </tr>
+          <tr>
+            <td>My-Learning</td>
+            <td><button id="btn-my-learning" class="res-btn">COPIAR</button></td>
+          </tr>
+          <tr>
+            <td>Solicitante No Disponible</td>
+            <td><button id="btn-no-disponible" class="res-btn">COPIAR</button></td>
+          </tr>
+          <tr>
+            <td>Plantilla Incorrecta</td>
+            <td>
+              <button id="btn-plantilla-incorrecta" class="res-btn">COPIAR</button>
+              <button id="btn-plantilla-incorrecta-foto" class="res-btn">FOTO</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Urgencia Incorrecta</td>
+            <td>
+              <button id="btn-urgencia-p1" class="res-btn">P1</button>
+              <button id="btn-urgencia-p2" class="res-btn">P2</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Correo Outlook</td>
+            <td><button id="btn-correo-outlook" class="res-btn">COPIAR</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
