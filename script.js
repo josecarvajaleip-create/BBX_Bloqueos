@@ -48,7 +48,7 @@ document.getElementById('btn-bbdd-lza').addEventListener('click', () => copyToCl
 // document.getElementById('btn-consulta-lza').addEventListener('click', () => copyToClipboard('select blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;'));
 
 
-document.getElementById('btn-val').addEventListener('click', () => copyToClipboard('psql produccion_val'));
+document.getElementById('btn-val').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql produccion_val\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
 
 // document.getElementById('btn-sdq').addEventListener('click', () => copyToClipboard('sudo su postgres\npsql sd_produccion\nselect blocked_pid, blocking_pid, query_blocked from migracion.ver_bloqueos;\n'));
 document.getElementById('btn-sdq').addEventListener('click', () => copyToClipboard('psql sd_produccion'));
@@ -134,15 +134,15 @@ function generarPermiso(e) {
 }
 
 function limpiarResultado() {
-  const resultado = document.getElementById('resultado-permiso');
-  resultado.innerHTML = '';
-  resultado.style.display = 'none';
+    const resultado = document.getElementById('resultado-permiso');
+    resultado.innerHTML = '';
+    resultado.style.display = 'none';
 
-  // Limpiar los campos del formulario
-  const form = document.querySelector('.template-form');
-  form.reset();
+    // Limpiar los campos del formulario
+    const form = document.querySelector('.template-form');
+    form.reset();
 
-  showNotification('Formulario y resultado limpiados');
+    showNotification('Formulario y resultado limpiados');
 }
 
 // Función para copiar imagen al portapapeles
@@ -237,7 +237,7 @@ document.getElementById('btn-correo-outlook').addEventListener('click', () => co
 
 // Copiar imagen al portapapeles
 document.getElementById('btn-plantilla-incorrecta-foto').addEventListener('click', () => {
-  copyImageToClipboard('img/plantilla.png');
+    copyImageToClipboard('img/plantilla.png');
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -374,15 +374,31 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const agregarTienda = (nomenclatura) => {
-        volverAVistaOriginal();
-        const contenidoActual = campoBloqueos.value.replace(/[\r\n\t ]+$/, '');
-        campoBloqueos.value = `${contenidoActual}\n\n\n${nomenclatura}`;
-        campoBloqueos.focus();
-        campoBloqueos.setSelectionRange(0, 0);
-        campoBloqueos.scrollTop = 0;
-        campoBloqueos.scrollLeft = 0;
-        showNotification(`${nomenclatura} agregado al cuadro`);
-    };
+    volverAVistaOriginal();
+
+    const contenidoSinRetorno = campoBloqueos.value.replace(/\r/g, '');
+
+    const contenidoLimpio = contenidoSinRetorno
+        .replace(/^(GCA|PMI|TFE|LZA|SDQ|PUR|CAU|VAL)\s*$/gm, '')
+        .replace(/[\n\t ]+$/, '');
+
+    if (contenidoLimpio.trim() === '') {
+        campoBloqueos.value = `\n\n\n${nomenclatura}`;
+    } else {
+        campoBloqueos.value = `${contenidoLimpio}\n\n\n${nomenclatura}`;
+    }
+
+    campoBloqueos.focus();
+
+    // Volver el cursor a la primera línea
+    campoBloqueos.setSelectionRange(0, 0);
+
+    // Volver la vista al inicio
+    campoBloqueos.scrollTop = 0;
+    campoBloqueos.scrollLeft = 0;
+
+    showNotification(`Tienda cambiada a ${nomenclatura}`);
+};
 
     const organizarResultado = (texto) => {
         const lineas = texto.replace(/\r/g, '').split('\n');
@@ -503,52 +519,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // contenido actual, pero la opción VER ORIGINAL sigue recuperando lo pegado.
 });
 
-async function copiarColumnaPid(indiceColumna) {
-    const cuadro = document.getElementById("bloqueos-tiendas");
+function copiarColumnaPid(indiceColumna) {
+    const cuadro = document.getElementById('bloqueos-tiendas');
 
     if (!cuadro) {
-        alert("No se encontró el cuadro de bloqueos.");
+        showNotification('No se encontró el cuadro de bloqueos', true);
         return;
     }
 
-    const lineas = cuadro.value.split(/\r?\n/);
+    const numeros = cuadro.value
+        .split(/\r?\n/)
+        .map(linea => linea.split('|'))
+        .filter(columnas => columnas.length > indiceColumna)
+        .map(columnas => columnas[indiceColumna].trim())
+        .filter(valor => /^\d+$/.test(valor));
 
-    const numeros = lineas
-        .map(function (linea) {
-            return linea.split("|");
-        })
-        .filter(function (columnas) {
-            return columnas.length >= 2;
-        })
-        .map(function (columnas) {
-            return columnas[indiceColumna].trim();
-        })
-        .filter(function (valor) {
-            return /^\d+$/.test(valor);
-        });
+    const pidsUnicos = [...new Set(numeros)];
 
-    if (numeros.length === 0) {
-        alert("No se encontraron PID en esa columna.");
+    if (pidsUnicos.length === 0) {
+        showNotification('No se encontraron PID', true);
         return;
     }
 
-    const resultado = numeros.join("\n");
+    const iframe = document.querySelector('.unlock-page-frame');
 
-    try {
-        await navigator.clipboard.writeText(resultado);
-        alert("¡PID copiados al portapapeles!");
-    } catch (error) {
-        const temporal = document.createElement("textarea");
-
-        temporal.value = resultado;
-        temporal.style.position = "fixed";
-        temporal.style.opacity = "0";
-
-        document.body.appendChild(temporal);
-        temporal.select();
-        document.execCommand("copy");
-        document.body.removeChild(temporal);
-
-        alert("¡PID copiados al portapapeles!");
+    if (!iframe || !iframe.contentWindow) {
+        showNotification('No se encontró el generador de query', true);
+        return;
     }
+
+    iframe.contentWindow.postMessage(
+        {
+            tipo: 'CARGAR_PIDS',
+            pids: pidsUnicos
+        },
+        '*'
+    );
+
+    iframe.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+
+    showNotification(`${pidsUnicos.length} PID enviados al generador`);
 }

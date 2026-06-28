@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Generador de Query</title>
 
-    <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <style>
         body {
@@ -186,10 +184,7 @@
             Listado Numérico (uno debajo de otro):
         </label>
 
-        <textarea
-            id="inputNumeros"
-            placeholder="Ejemplo: 1&#10;2&#10;3&#10;4"
-        ></textarea>
+        <textarea id="inputNumeros" placeholder="Ejemplo: 1&#10;2&#10;3&#10;4"></textarea>
 
         <div class="mensaje-enter">
             Presiona ENTER para generar
@@ -200,45 +195,51 @@
         <pre id="resultadoQuery"></pre>
 
         <div class="query-actions">
-            <button
-                type="button"
-                class="query-button copy-button"
-                onclick="copiarResultado()"
-            >
+            <button type="button" class="query-button copy-button" onclick="copiarResultado()">
                 Copiar
             </button>
 
-            <button
-                type="button"
-                class="query-button clear-button"
-                onclick="limpiarGenerador()"
-            >
+            <button type="button" class="query-button clear-button" onclick="limpiarGenerador()">
                 Limpiar
             </button>
         </div>
     </div>
 
-    <button
-        type="button"
-        class="toggle-mode-button"
-        onclick="toggleDarkMode()"
-        title="Modo oscuro"
-    >
+    <button type="button" class="toggle-mode-button" onclick="toggleDarkMode()" title="Modo oscuro">
         <i class="material-icons">brightness_2</i>
     </button>
 
-    <button
-        type="button"
-        class="toggle-mode-button"
-        onclick="toggleLightMode()"
-        title="Modo claro"
-    >
+    <button type="button" class="toggle-mode-button" onclick="toggleLightMode()" title="Modo claro">
         <i class="material-icons">brightness_5</i>
     </button>
 
     <script>
         const inputNumeros = document.getElementById("inputNumeros");
         const resultadoQuery = document.getElementById("resultadoQuery");
+
+        window.addEventListener("message", function (event) {
+            if (!event.data || event.data.tipo !== "CARGAR_PIDS") {
+                return;
+            }
+
+            const pids = Array.isArray(event.data.pids)
+                ? event.data.pids
+                : [];
+
+            inputNumeros.value = pids.join("\n");
+
+            generarQuery();
+
+            inputNumeros.focus();
+            inputNumeros.scrollTop = 0;
+            inputNumeros.setSelectionRange(
+                inputNumeros.value.length,
+                inputNumeros.value.length
+            );
+        });
+
+
+
 
         /*
          * Genera las consultas después de pulsar Enter.
@@ -326,6 +327,6 @@
         }
     </script>
 </body>
+
 </html>
 ```
-
